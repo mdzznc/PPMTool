@@ -1,5 +1,7 @@
 package io.agileintelligence.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -21,6 +23,10 @@ public class ProjectTask {
     private Date update_At;
     @Column(updatable = false)
     private String projectIdentifier;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "backlog_id", updatable = false, nullable = false)
+    @JsonIgnore
+    private Backlog backlog;
     @PrePersist
     protected void onCreate(){
         this.create_At = new Date();
@@ -111,6 +117,14 @@ public class ProjectTask {
 
     public void setProjectIdentifier(String projectIdentifier) {
         this.projectIdentifier = projectIdentifier;
+    }
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
     }
 
     @Override
