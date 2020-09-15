@@ -1,7 +1,11 @@
 import axios from "axios";
-import { GET_ERRORS, GET_BACKLOG, GET_PROJECT_TASK } from "./types";
+import {
+  GET_ERRORS,
+  GET_BACKLOG,
+  GET_PROJECT_TASK,
+  DELETE_PROJECT_TASK,
+} from "./types";
 
-//Fix bug with priority in Spring Boot Server, needs to check null first
 export const addProjectTask = (backlog_id, project_task, history) => async (
   dispatch
 ) => {
@@ -19,6 +23,7 @@ export const addProjectTask = (backlog_id, project_task, history) => async (
     });
   }
 };
+
 export const getBacklog = (backlog_id) => async (dispatch) => {
   try {
     const res = await axios.get(`/api/backlog/${backlog_id}`);
@@ -33,6 +38,7 @@ export const getBacklog = (backlog_id) => async (dispatch) => {
     });
   }
 };
+
 export const getProjectTask = (backlog_id, pt_id, history) => async (
   dispatch
 ) => {
@@ -64,6 +70,16 @@ export const updateProjectTask = (
     dispatch({
       type: GET_ERRORS,
       payload: err.response.data,
+    });
+  }
+};
+
+export const deleteProjectTask = (backlog_id, pt_id) => async (dispatch) => {
+  if (window.confirm("Are you sure to delete?")) {
+    await axios.delete(`/api/backlog/${backlog_id}/${pt_id}`);
+    dispatch({
+      type: DELETE_PROJECT_TASK,
+      payload: pt_id,
     });
   }
 };
